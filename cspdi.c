@@ -1,44 +1,62 @@
 #include "ft_printf.h"
 
-int ft_chr(va_list input)
+int	ft_c(va_list input)
 {
-	char ptr;
+	char	ptr;
 
 	ptr = va_arg(input, int);
 	if (!ptr)
-		{
-			write(1, &ptr, 1);
-			return (1);
-		}
+	{
+		write(1, &ptr, 1);
+		return (1);
+	}
 	ft_putchar(ptr);
-	return(1);
+	return (1);
 }
 
-int	ft_str(va_list input)
+int	ft_s(va_list input)
 {
 	int		i;
-	char 	*str;
+	char	*str;
 	char	*ptr;
 
 	ptr = va_arg(input, char *);
 	if (!ptr)
-		return (write(1, "(null)", 6));
+		return (output("(null)"));
 	str = ft_strdup(ptr);
-	i = put_str(str);
+	i = output(str);
 	free(str);
 	return (i);
 }
 
-int ft_int_dec(va_list input)
+int	ft_p(va_list input)
 {
-	int i;
-	int ptr;
-	char *str;
+	size_t			ptr;
+	char			*str;
+	char			*hex;
+	int				i;
+
+	ptr = va_arg(input, size_t);
+	if (!ptr)
+		return (output("0x0"));
+	hex = get_hex(ptr);
+	str = ft_strjoin("0x", hex);
+	i = output(str);
+	free(hex);
+	free(str);
+	return (i);
+}
+
+int	ft_d_i(va_list input)
+{
+	int		i;
+	int		ptr;
+	char	*str;
 
 	i = 0;
 	ptr = va_arg(input, int);
 	str = ft_itoa(ptr);
-	i = put_str(str);
+	i = output(str);
 	free(str);
 	return (i);
 }

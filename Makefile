@@ -1,44 +1,33 @@
-SRC		:=	ft_printf.c cspdi.c uxX%.c put.c tag.c ft_int_to_hex.c
+NAME = libftprintf.a
 
-OBJS    :=	$(SRC:.c=.o)
+SRC = ft_printf.c \
+converters.c \
+cspdi.c \
+uxX%.c
 
-NAME	:=	libftprintf.a
-RLIB    :=	ranlib
-CC		:=	clang
-LIB		:=	ar rcs
-
-CFLAGS	=	-Wall -Wextra -Werror
-LFLAGS	=	-I.
-RM		:=	rm -rf
-
-LIBFT	:=	libft
-LIBFT_L :=	libft/libft.a
+OBJS    =	$(SRC:.c=.o)
 
 all:		libft $(NAME)
 
-.c.o:
-			$(CC) $(CFLAGS) -c $< -o $@ $(LFLAGS)/$(LIBFT)
+%.o : %.c
+			clang -Wall -Wextra -Werror -c $< -o $@ -I/libft
 
 $(NAME):	$(OBJS)
 			cp ./libft/libft.a $(NAME)
-			$(LIB) $(NAME) $(OBJS)
-			$(RLIB) $(NAME)
+			ar rcs $(NAME) $(OBJS)
+			ranlib $(NAME)
 
 clean:
-			$(MAKE) -C $(LIBFT) clean
-			$(RM) $(OBJS)
+			$(MAKE) -C libft clean
+			rm -rf $(OBJS)
 
 fclean: 	clean
-			$(MAKE) -C $(LIBFT) fclean
+			$(MAKE) -C libft fclean
 			$(RM) $(NAME)
 
 libft:
-			$(MAKE) -C $(LIBFT)
-test:
-			@(printf "Enter flag: "; read arg; cd sant/ && sh test $$arg; cd ../tripp/ && make $$arg)
-			@($(MAKE) fclean)
-comp:
-			gcc -Wall -Wextra -Werror *.c libft/*.c;
+			$(MAKE) -C libft
+
 re: 		@(fclean all)
 
 .PHONY: 	all clean fclean re libft

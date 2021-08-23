@@ -1,25 +1,33 @@
 #include "ft_printf.h"
 
-int ft_printf(const char *format, ...)
+int	ft_printf(const char *format, ...)
 {
-	va_list input;
-	int nbchar;
-	char *ptr;
-	int	tmp_i;
+	va_list	input;
+	int		totchar;
+	int		mem;
+	char	*ptr;
 
+	totchar = 0;
+	mem = 1;
 	if (!ft_strchr(format, '%'))
-		return (put_str((char *)format));
+		return (output((char *)format));
 	va_start(input, format);
 	ptr = (char *)format;
-	nbchar = printf_handler(&ptr, input);
-	tmp_i = 1;
-	while (*ptr && tmp_i != -1)
+	while (*ptr)
 	{
-		tmp_i = printf_handler(&ptr, input);
-		nbchar += tmp_i;
+		mem = converter(&ptr, input);
+		if (mem == -1)
+			return (-1);
+		totchar += mem;
 	}
 	va_end(input);
-	if (tmp_i == -1)
-		return (tmp_i);
-	return (nbchar);
+	return (totchar);
+}
+
+int	output(char *str)
+{
+	int	i;
+
+	i = write(1, str, ft_strlen(str));
+	return (i);
 }
